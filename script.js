@@ -1,70 +1,54 @@
-// const personalIdNumberText = prompt(
-//   'Zadejte prosím vaše rodné číslo bez lomítka.',
-// );
-//
-
-const checkBirthId = (personalIdNumberText) => {
-  if (personalIdNumberText.length !== 10) {
+const checkBirthId = (string) => {
+  if (string.length !== 10) {
     return 'invalidLength';
   }
-
-  const personalIdNumber = Number(personalIdNumberText);
-  if (!Number.isInteger(personalIdNumber)) {
+  if (!Number.isInteger(Number(string))) {
     return 'notANumber';
   }
-
-  if (personalIdNumber % 11 !== 0) {
+  if (string % 11 !== 0) {
     return 'failedChecksum';
   }
-
   return 'ok';
 };
 
-const rodnaCislaKOtestovani = [
-  '123',
-  'nepovím',
-  '7060201236',
-  '7060201235',
-  '123456789123456789',
-  '9062185440',
-  '123č56q8y7',
-];
-
-rodnaCislaKOtestovani.forEach((prvek) => {
-  const vysledek = checkBirthId(prvek);
-  console.log(`Testovaná hodnota: ${prvek} a výsledek je ${vysledek}`);
-});
-
+const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const isDigit = (string) => {
-  const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   return digits.includes(string);
 };
 
 const validateCharacters = (string) => {
   const result = [];
-  const poleZnaku = string.split('');
-  poleZnaku.forEach((znak) => {
-    const charResult = {
-      char: znak,
-      digit: isDigit(znak),
-    };
-    return result.push(charResult);
+  Array.from(string).forEach((prvek) => {
+    result.push({ char: prvek, digit: isDigit(prvek) });
   });
-  return console.log(result);
+  console.log(result);
+  return result;
 };
 
-validateCharacters('123č56q8y7');
-validateCharacters('7060201236');
-
 const formElm = document.getElementById('form');
-const messageElm = document.getElementById('vystup');
-const inputElm = document.getElementById('vstup');
 
 formElm.addEventListener('submit', (e) => {
   e.preventDefault();
+
+  const vystupElm = document.getElementById('vystup');
+  const inputElm = document.getElementById('vstup');
+  const resultElm = document.querySelectorAll('.result');
   if (checkBirthId(inputElm.value) === 'ok') {
-    messageElm.textContent = '✔️ V pořádku.';
+    vystupElm.textContent = '✔️ V pořádku.';
   } else {
-    messageElm.textContent = '❌ V rodném čísle jsou chyby.';
+    vystupElm.textContent = '❌ V rodném čísle jsou chyby.';
   }
+  const result = validateCharacters(inputElm.value);
+
+  resultElm.forEach((div, index) => {
+    div.innerHTML = result[index].char;
+    if (result[index].digit) {
+      div.classList.add('result--true');
+      div.classList.remove('result--false');
+    } else {
+      div.classList.add('result--false');
+      div.classList.remove('result--true');
+    }
+  });
+  inputElm.value = '';
 });

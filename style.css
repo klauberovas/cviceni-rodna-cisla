@@ -20,6 +20,22 @@ button {
   margin-top: 1rem;
 }
 
-.result {
+.results {
+  margin-top: 2rem;
   display: flex;
+  gap: 0.3rem;
+}
+
+.result {
+  font-size: 2rem;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.result--true {
+  background-color: #00DD00;
+}
+
+.result--false {
+  background-color: #FF8686;
 }
